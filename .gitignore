@@ -1,0 +1,12 @@
+# 基本忽略规则
+Binaries/
+Intermediate/
+Saved/
+DerivedDataCache/
+
+# IDE和系统文件
+.vs/
+.idea/
+.vscode/
+.DS_Store
+*.VC.db
