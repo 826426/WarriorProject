@@ -19,7 +19,7 @@ class WAIRROR_API UAbilityTask_ExecuteTaskOnTick : public UAbilityTask
 public:
 	UAbilityTask_ExecuteTaskOnTick();
 
-	UFUNCTION(BlueprintCallable, Category = "Warrior|AbilityTask", meta = (HidePin = "OwningAbility", DefaultToSelf = "OwningAbility", BlueprintInternalUseOnly = true))
+	UFUNCTION(BlueprintCallable, Category = "Warrior|AbilityTasks", meta = (HidePin = "OwningAbility", DefaultToSelf = "OwningAbility", BlueprintInternalUseOnly = true))
 	static UAbilityTask_ExecuteTaskOnTick* ExecuteTaskOnTick(UGameplayAbility* OwningAbility);
 
 	//` Begin UGameplayTask Interface

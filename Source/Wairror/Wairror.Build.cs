@@ -17,7 +17,9 @@ public class Wairror : ModuleRules
 			"GameplayTags",
             "GameplayTasks",
             "AnimGraphRuntime",
-            "MotionWarping"});
+            "MotionWarping",
+            "Niagara",
+            "NavigationSystem"});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

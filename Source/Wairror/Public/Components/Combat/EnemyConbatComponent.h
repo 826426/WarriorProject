@@ -17,4 +17,6 @@ class WAIRROR_API UEnemyConbatComponent : public UPawnConbatComponent
 public:
 	virtual void OnHitTargetActor(AActor* HitActor) override;
 	
+protected:
+	virtual void ToggleBodyCollisionBoxCollision(bool bShouldEnable, EToggleDamageType ToggleDamageType) override;
 };
