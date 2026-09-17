@@ -223,7 +223,7 @@ void UWarriorFunctionLibrary::SaveCurrentGameDifficulty(EWarriorGameDifficulty I
 	if (UWarriorSaveGame* WarriorSaveGameObject = Cast<UWarriorSaveGame>(SaveGameObject)) {
 		WarriorSaveGameObject->SavedCurrentGameeDifficulty = InDifficultyToSave;
 
-		const bool bWasSaved = UGameplayStatics::SaveGameToSlot(WarriorSaveGameObject, WairroGamePlayerTags::GameData_SaveGame_Slot_1.GetTag().ToString(), 0);
+		const bool bWasSaved = UGameplayStatics::SaveGameToSlot(WairroGamePlayerTags::GameData_SaveGame_Slot_1.GetTag().ToString(), 0);
 
 
 	}
@@ -242,4 +242,3 @@ bool UWarriorFunctionLibrary::TryLoadSavedGameDifficulty(EWarriorGameDifficulty&
 	}
 	return false;
 }
-
