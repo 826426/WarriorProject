@@ -9,6 +9,7 @@
 class AWairrorHeroCharacter;
 class AWairrorHeroController;
 class UHeroConbatComponent;
+class UHeroUIComponent;
 
 /**
  * 
@@ -29,7 +30,13 @@ public:
 	UHeroConbatComponent* GetHeroConbatComponentFromActorInfo();
 
 	UFUNCTION(BlueprintPure, Category = "Warrior|Ability")
+	UHeroUIComponent* GetHeroUIComponenttFromActorInfo();
+
+	UFUNCTION(BlueprintPure, Category = "Warrior|Ability")
 	FGameplayEffectSpecHandle MakeHeroDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, float InWeaponBaseDamage, FGameplayTag InCurrentAttackTypeTag, int32 InUsedComboCount);
+
+	UFUNCTION(BlueprintCallable, Category = "Warrior|Ability")
+	bool GetAbilityRemainingCooldownByTag(FGameplayTag InCoolDownTag, float& TotalCooldownTime, float& RemainingCooldownTime);
 
 private:
 	TWeakObjectPtr<AWairrorHeroCharacter> CachedWairrorHeroCharacter;

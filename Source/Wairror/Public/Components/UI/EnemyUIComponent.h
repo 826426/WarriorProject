@@ -13,5 +13,14 @@ UCLASS()
 class WAIRROR_API UEnemyUIComponent : public UPwanUIComponent
 {
 	GENERATED_BODY()
-	
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void RegisterEnemyDrwanWidget(UWarriorWidgetBase* InWidgetToRegister);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveEnemyDrawnWidgetsIfAny();
+
+private:
+	TArray<UWarriorWidgetBase*> EnemyDrawWidgets;
 };

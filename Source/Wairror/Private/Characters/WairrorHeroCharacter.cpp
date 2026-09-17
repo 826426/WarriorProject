@@ -15,6 +15,7 @@
 #include "Components/Combat/HeroConbatComponent.h"
 #include "Components/UI/HeroUIComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "GameModes/WairrorBaseGameMode.h"
 
 #include "WairrorDebugHelper.h"
 
@@ -68,7 +69,31 @@ void AWairrorHeroCharacter::PossessedBy(AController* NewController)
 	if (!CharacterStartUpData.IsNull()) {
 
 		if (UDataAsset_StartUpDataBase* LoadedData = CharacterStartUpData.LoadSynchronous()) {
-			LoadedData->GiveToAbilitySystemComponent(WarriorAbilitySystemComponent);
+			int32 AbilityApplyLevel = 1;
+			if (AWairrorBaseGameMode* BaseGameMode = GetWorld()->GetAuthGameMode<AWairrorBaseGameMode>()) {
+				switch (BaseGameMode->GetCurrentGameDifficulty())
+				{
+				case EWarriorGameDifficulty::Easy:
+					AbilityApplyLevel = 4;
+					break;
+
+				case EWarriorGameDifficulty::Normal:
+					AbilityApplyLevel = 3;
+					break;
+
+				case EWarriorGameDifficulty::Hard:
+					AbilityApplyLevel = 2;
+					break;
+
+				case EWarriorGameDifficulty::VeryHard:
+					AbilityApplyLevel = 1;
+					break;
+
+				default:
+					break;
+				}
+			}
+			LoadedData->GiveToAbilitySystemComponent(WarriorAbilitySystemComponent, AbilityApplyLevel);
 		}
 	}
 }
@@ -92,9 +117,8 @@ void AWairrorHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	WairrorInputComponent->BindNativeInputAction(InputConfigDataAsset, WairroGamePlayerTags::InputTag_SwitchTarget, ETriggerEvent::Triggered, this, &AWairrorHeroCharacter::Input_SwitchTargetTriggered);
 	WairrorInputComponent->BindNativeInputAction(InputConfigDataAsset, WairroGamePlayerTags::InputTag_SwitchTarget, ETriggerEvent::Completed, this, &AWairrorHeroCharacter::Input_SwitchTargetCompleted);
 
+	WairrorInputComponent->BindNativeInputAction(InputConfigDataAsset, WairroGamePlayerTags::InputTag_PickUp_Stones, ETriggerEvent::Started, this, &AWairrorHeroCharacter::Input_PickUpStonesStarted);
 	WairrorInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &AWairrorHeroCharacter::Input_AbilityInputPressed, &AWairrorHeroCharacter::Input_AbilityInputReleased);
-	
-	
 }
 
 
@@ -147,6 +171,16 @@ void AWairrorHeroCharacter::Input_SwitchTargetCompleted(const FInputActionValue 
 	);
 
 
+}
+void AWairrorHeroCharacter::Input_PickUpStonesStarted(const FInputActionValue& InputActionValue)
+{
+	FGameplayEventData Data;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+		this,
+		WairroGamePlayerTags::Player_Event_ConsumeStones,
+		Data
+	);
 }
 void AWairrorHeroCharacter::Input_AbilityInputPressed(FGameplayTag InInputTag) 
 {

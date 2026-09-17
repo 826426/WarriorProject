@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ // Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "AbilitySystem/WarriorAbilitySystemComponent.h"
@@ -12,13 +12,8 @@ void UWarriorAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& I
 	for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities()) {
 		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag)) continue;
 
-		if (InInputTag.MatchesTag(WairroGamePlayerTags::InputTag_Toggleable)) {
-			if (AbilitySpec.IsActive()) {
-				CancelAbilityHandle(AbilitySpec.Handle);
-			}
-			else {
-				TryActivateAbility(AbilitySpec.Handle);
-			}
+		if (InInputTag.MatchesTag(WairroGamePlayerTags::InputTag_Toggleable) && AbilitySpec.IsActive()) {
+			CancelAbilityHandle(AbilitySpec.Handle);
 		}
 		else {
 			TryActivateAbility(AbilitySpec.Handle);
@@ -39,11 +34,22 @@ void UWarriorAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag &
 	}
 }
 
-void UWarriorAbilitySystemComponent::GrantHeroWeaponAbilities(const TArray<FWrriorHeroAbilitySet>& InDefaultWeaponAbilities, int32 ApplyLevel, TArray<FGameplayAbilitySpecHandle>& OutGrntedAbilitySpecHandles)
+void UWarriorAbilitySystemComponent::GrantHeroWeaponAbilities(const TArray<FWrriorHeroAbilitySet>& InDefaultWeaponAbilities, const TArray<FWrriorHeroSpecialAbilitySet>& InSpecialWeaponAbilities, int32 ApplyLevel, TArray<FGameplayAbilitySpecHandle>& OutGrntedAbilitySpecHandles)
 {
 	if (InDefaultWeaponAbilities.IsEmpty()) return;
 
 	for (const FWrriorHeroAbilitySet& AbilitySet : InDefaultWeaponAbilities) {
+		if (!AbilitySet.IsValid()) continue;
+
+		FGameplayAbilitySpec AbilitySpec(AbilitySet.AbilityToGrant);
+		AbilitySpec.SourceObject = GetAvatarActor();
+		AbilitySpec.Level = ApplyLevel;
+		AbilitySpec.DynamicAbilityTags.AddTag(AbilitySet.InputTag);
+
+		OutGrntedAbilitySpecHandles.AddUnique(GiveAbility(AbilitySpec));
+	}
+
+	for (const FWrriorHeroSpecialAbilitySet& AbilitySet : InSpecialWeaponAbilities) {
 		if (!AbilitySet.IsValid()) continue;
 
 		FGameplayAbilitySpec AbilitySpec(AbilitySet.AbilityToGrant);

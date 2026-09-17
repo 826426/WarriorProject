@@ -3,3 +3,8 @@
 
 #include "GameModes/WairrorBaseGameMode.h"
 
+AWairrorBaseGameMode::AWairrorBaseGameMode()
+{
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
+}
